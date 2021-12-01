@@ -1,0 +1,22 @@
+list =
+  "input.txt"
+  |> File.read!()
+  |> String.split("\n", trim: true)
+  |> Enum.map(fn n ->
+    n
+    |> Integer.parse()
+    |> elem(0)
+  end)
+
+triplets =
+ [list, Enum.slice(list, 1..-1), Enum.slice(list, 2..-1)] |> Enum.zip
+
+[triplets, Enum.slice(triplets, 1..-1)]
+|> Enum.zip_reduce(0, fn pairs, total ->
+  case pairs do
+    [{x1, y1, z1}, {a1, b1, c1}] when x1 + y1 + z1 < a1 + b1 + c1 -> total + 1
+    _ -> total
+  end
+end)
+|> IO.inspect
+
